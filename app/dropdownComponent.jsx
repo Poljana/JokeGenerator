@@ -3,18 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
-/* const data = [
-  { label: 'Item 1', value: '1' },
-  { label: 'Item 2', value: '2' },
-  { label: 'Item 3', value: '3' },
-  { label: 'Item 4', value: '4' },
-  { label: 'Item 5', value: '5' },
-  { label: 'Item 6', value: '6' },
-  { label: 'Item 7', value: '7' },
-  { label: 'Item 8', value: '8' },
-]; */
-
-const DropdownComponent = ({data}) => {
+const DropdownComponent = ({data, onTypeChange}) => {
   const [value, setValue] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
 
@@ -22,12 +11,17 @@ const DropdownComponent = ({data}) => {
     if (value || isFocus) {
       return (
         <Text style={[styles.label, isFocus && { color: 'blue' }]}>
-          Dropdown label
+          Select Joke Type
         </Text>
       );
     }
     return null;
   };
+
+  const dropdownData = data.map(type => ({
+    label: type,
+    value: type
+  }))
 
   return (
     <View style={styles.container}>
@@ -38,10 +32,11 @@ const DropdownComponent = ({data}) => {
         selectedTextStyle={styles.selectedTextStyle}
         inputSearchStyle={styles.inputSearchStyle}
         iconStyle={styles.iconStyle}
-        data={data}
-        search
+        data={dropdownData}
         maxHeight={300}
-        
+        search
+        labelField="label"
+        valueField="value"
         placeholder={!isFocus ? 'Select item' : '...'}
         searchPlaceholder="Search..."
         value={value}
@@ -50,7 +45,9 @@ const DropdownComponent = ({data}) => {
         onChange={item => {
           setValue(item.value);
           setIsFocus(false);
+          onTypeChange(item.value)
         }}
+        
         renderLeftIcon={() => (
           <AntDesign
             style={styles.icon}
@@ -70,6 +67,8 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     padding: 16,
+    width: "50%",
+    marginInline: "auto"
   },
   dropdown: {
     height: 50,
